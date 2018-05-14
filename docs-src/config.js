@@ -12,6 +12,22 @@ module.exports = {
       }
     }
   },
+  '基础': {
+    'childs': {
+      '🖥&nbsp; chimee 的展示':{
+        'md_fname': 'chimee_player',
+        'md_url': 'https://raw.githubusercontent.com/chimeejs/chimee/master/doc/zh-cn/essentials/html.md'
+      },
+      '📱&nbsp; 插件的使用':{
+        'md_fname': 'chimee_plugin_usage',
+        'md_url': 'https://raw.githubusercontent.com/Chimeejs/chimee/master/doc/zh-cn/essentials/plugin-usage.md'
+      },
+      '📱&nbsp; chimee 的播放器特性':{
+        'md_fname': 'chimee_video',
+        'md_url': 'https://raw.githubusercontent.com/chimeejs/chimee/master/doc/zh-cn/essentials/video.md'
+      }
+    }
+  }
   '快捷接入': {
     'childs':{
       '🖥&nbsp; PC 端':{
@@ -32,19 +48,19 @@ module.exports = {
       },
       '🛎&nbsp; Chimee API 介绍':{
         'md_fname': 'chimee_api',
-        'md_url': 'https://raw.githubusercontent.com/Chimeejs/chimee/master/doc/zh-cn/chimee-api.md'
+        'md_url': 'https://raw.githubusercontent.com/Chimeejs/chimee/master/doc/zh-cn/api/chimee-api.md'
       },
       '🔌&nbsp; Chimee 插件 API':{
         'md_fname': 'chimee_plugin_api',
-        'md_url': 'https://raw.githubusercontent.com/Chimeejs/chimee/master/doc/zh-cn/plugin-api.md'
+        'md_url': 'https://raw.githubusercontent.com/Chimeejs/chimee/master/doc/zh-cn/api/plugin-api.md'
       },
       '🛠&nbsp; 如何编写一个插件':{
         'md_fname': 'how_to_write_a_plugin',
-        'md_url': 'https://raw.githubusercontent.com/Chimeejs/chimee/master/doc/zh-cn/how-to-write-a-plugin.md'
+        'md_url': 'https://raw.githubusercontent.com/Chimeejs/chimee/master/doc/zh-cn/advanced/how-to-write-a-plugin.md'
       },
       '📚&nbsp; 实现一个popup插件':{
         'md_fname': 'how_to_write_a_popup_plugin',
-        'md_url': 'https://raw.githubusercontent.com/Chimeejs/chimee/master/doc/zh-cn/how-to-write-a-popup-plugin.md'
+        'md_url': 'https://raw.githubusercontent.com/Chimeejs/chimee/master/doc/zh-cn/advanced/how-to-write-a-popup-plugin.md'
       }
     }
   },
@@ -116,7 +132,7 @@ module.exports = {
       },
       '🎁&nbsp; 为何说Chimee是组件化框架':{
         'md_fname': 'why_chimee_is_a_frame',
-        'md_url': 'https://raw.githubusercontent.com/Chimeejs/chimee/master/doc/zh-cn/why-chimee-is-a-frame.md'
+        'md_url': 'https://raw.githubusercontent.com/Chimeejs/chimee/master/doc/zh-cn/design/why-chimee-is-a-frame.md'
       },
       '🎁&nbsp; H5-Video 能做的事&存在的坑':{
         'md_fname': 'chimee_player_preface',
