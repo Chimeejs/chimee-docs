@@ -27,7 +27,7 @@ module.exports = {
         'md_url': 'https://raw.githubusercontent.com/chimeejs/chimee/master/doc/zh-cn/essentials/video.md'
       }
     }
-  }
+  },
   '快捷接入': {
     'childs':{
       '🖥&nbsp; PC 端':{
