@@ -18,7 +18,7 @@ import chimee from 'chimee';
 import chimeePluginControlbar from 'chimee-plugin-controlbar';
 
 // 安装插件
-chimee.install(chimeeControlbar);
+chimee.install(chimeePluginControlbar);
 const player = new chimee({
   // ...
   // 使用插件
@@ -76,12 +76,25 @@ plugin: [{
   * 可选值： 十六进制颜色('#fff')
   * 默认值： '#4c4c4c'
   * 非必需
-
+#### barShowByMouse
+  * 类型： string
+  * 作用：控制条显示由
+    * move 触发 播放器的 mousemove 显示 
+    * enter/levae 鼠标进入/出，来控制 控制条显示／隐藏
+  * 可选值： 'move', 'enter'
+  * 默认值： 'move'
+  * 非必需
+#### hideBarTime
+  * 类型： number
+  * 作用：hidebar 延迟时间
+  * 默认值： 2000
+  * 注意：barShowByMouse 为 move 时有效，enter 时为0， 用户设置无效
+  * 非必需
 #### children
   * 类型： Object
   * 含义： 配置子组件是否展示／展示方式，还可以自己扩展子组件
   * 非必需
-  * 目前支持的组件： play, progressTime, progressBar, volume, screen, clarity
+  * 目前支持的组件： play, progressTime, progressBar, volume, screen, clarity, playbackrate
   
 ##### 目前支持的组件及配置
 
@@ -90,6 +103,9 @@ plugin: [{
     * 含义： 配置播放暂停键 icon 及事件
     * 默认： {}
     * 可配置属性：
+      * 生命周期：
+        * create: 插入 dom 节点, 完成事件注册
+        * destroy
       * bitmap: true/ false 是否是位图，默认 false， 如果用户采用位图的话，则把当前的默认 svg 都清空掉， 用户通过 css background 来自己设置图片
       * icon: play / pause 图标， 支持 svg 图
       * animate: 当前是一个 svg path 动画，可以传 path 来实现你想要的动画
@@ -130,6 +146,9 @@ plugin: [{
     * 含义： 时间展示组件，用来展示播放时间／开播时间／视频总时长
     * 默认： {}
     * 可配置属性：
+      * 生命周期：
+        * create: 插入 dom 节点, 完成事件注册
+        * destroy
       * event: 绑定 dom 事件， this 指向这个插件， 通过 this.$dom 可以拿到 dom 节点
 
     配置 🌰
@@ -150,6 +169,9 @@ plugin: [{
     * 含义： 进度条控制组件
     * 默认： {}, 属性值为 false 的时候，表示，他是一个占位符，不现实，可以区分左右，目前只有 progressbar 有这个功能
     * 可配置属性：
+      * 生命周期：
+        * create: 插入 dom 节点, 完成事件注册
+        * destroy
       * layout: 有两种位置， 一是，居中布局。二是，位于整个控制条顶部。
         * 可选值： 'top' ／ 'baseline'(默认)
       * event: 绑定 dom 事件， this 指向这个插件， 通过 this.$dom 可以拿到 dom 节点
@@ -174,6 +196,9 @@ plugin: [{
     * 含义： 声音控制组件
     * 默认： {}
     * 可配置属性：
+      * 生命周期：
+        * create: 插入 dom 节点, 完成事件注册
+        * destroy
       * layout: 有两种位置， 一是，垂直。二是，水平。
         * 可选值： 'vertical' ／ 'horizonal'(默认)
       * bitmap: true/ false 是否是位图，默认 false，如果用户采用位图的话，则把当前的默认 svg 都清空掉， 用户通过 css background 来自己设置图片
@@ -207,6 +232,9 @@ plugin: [{
     * 含义： 配置全屏／非全屏 icon 及事件
     * 默认： {}
     * 可配置属性：
+      * 生命周期：
+        * create: 插入 dom 节点, 完成事件注册
+        * destroy
       * bitmap: true/ false 是否是位图，默认 false，如果用户采用位图的话，则把当前的默认 svg 都清空掉， 用户通过 css background 来自己设置图片
       * icon: full / small 图标， 支持 svg 图
       * event: 绑定 dom 事件， this 指向这个插件， 通过 this.$dom 可以拿到 dom 节点
@@ -236,10 +264,37 @@ plugin: [{
     * 含义： 切换清晰度组件
     * 默认： {}
     * 可配置参数
+      * 生命周期：
+        * create: 插入 dom 节点, 完成事件注册
+        * destroy
       * list: []
-      * duraion: Number 默认 10 秒， 单位 ： 秒， [chimee duration 定义](https://github.com/chimeejs/chimee/blob/master/doc/zh-cn/plugin-api.md#-silentload)
-      * increment: Number 默认 0 秒， 单位 ： 秒， [chimee duration 定义](https://github.com/chimeejs/chimee/blob/master/doc/zh-cn/plugin-api.md#-silentload)
-    * 注意空数组时不展示
+      * duration
+        * 类型：`number`
+        * 默认：3
+        * 单次视频加载的时长
+        * 若在规定的时间段内加载不成功，则放弃此次任务。
+        * 单位为秒，对应于主视频的播放时间，也就是说若主视频暂停播放，则时间停滞，但加载仍继续。
+      * bias
+        * 类型：`number`
+        * 默认：0
+        * 偏差区间，单位为秒
+        * 若该值小于等于0，则在主视频播放到或超过约定时间点直接切换，若新视频加载失败，则放弃此次切换。
+        * 若该值大于0，则当主视频播放到约定时间偏差区间里，一旦视频加载成功就切换。若超出偏差空间，则放弃此次切换。
+      * repeatTimes
+        * 类型：`number`
+        * 默认：0
+        * 重复次数
+        * 若加载视频失败，则自动重新加载，直至重复次数耗尽。默认不重复加载。
+      * increment
+        * 类型：`number`
+        * 默认：0
+        * 每次重复时递增的时间，单位为秒
+        * 一般而言加载失败都是因为超时加载失败，故每次重复的时候应相应延长加载时间。每次重复加载都会相应叠加该值对应的时间。
+      * immediate
+        * 类型：`boolean`
+        * 默认：`false`
+        * 新视频加载成功后是否立即切换无需等待到约定时间。
+        * 注意空数组时不展示
 
     配置 🌰
 
@@ -263,10 +318,44 @@ plugin: [{
 
     点播切流测试： http://chimee.org/demo/clarity.html
   
+  * playbackrate
+    * 类型： Object
+    * 含义： 切换播放倍速组件
+    * 默认： {}
+    * 可配置参数
+      * 生命周期：
+        * create: 插入 dom 节点, 完成事件注册
+        * destroy
+      * list: []
+        * defualt: 默认播放速率 boolean值
+    * 注意空数组时不展示
+
+    配置 🌰
+
+    ```javascirpt
+    {
+      // default 通过设置 default 来标明当前播放速率
+      list: [
+        {name: '0.5倍速', value: 0.5},
+        {name: '1倍速', value: 1, default: true},
+        {name: '2倍速', value: 2}
+      ],
+      // 可以指定 event 来绑定一些事件，默认 this 是该插件，而不是 dom
+      event: {
+        click () {
+          console.log('');
+        }
+      }
+    }
+    ```
+
   * 自定义组件
     * 类型： Object
     * 含义： 自定义组件
     * 可配置属性：
+      * 生命周期：
+        * create: 插入 dom 节点, 完成事件注册
+        * destroy
       * tag: 自定义标签名
       * html: 自定义标签中的 html 内容
       * event: 绑定 dom 事件， this 指向这个插件， 通过 this.$dom 可以拿到 dom 节点
@@ -311,6 +400,11 @@ plugin: [{
 
   A: 假如 children 配置后， 会读 children 的属性，并渲染， 不会补充其他组件，所以，需要你把所有的组件都写.
 
+## 方法
+
+  * updateClarity
+    * 含义： 更新清晰度列表
+    * 参数：Array 清晰度列表
 
 ## 最后
 

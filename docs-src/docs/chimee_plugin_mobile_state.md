@@ -23,7 +23,15 @@ const player = new chimee({
   // ...
   // 使用插件
   plugin: [
-    chimeePluginMobileState.name
+    {
+      chimeePluginMobileState.name,
+      errorTips: '错误提示', // 也可以塞一个 dom 节点
+      icon: {
+        loading: ``, // 可传入 svg， 内部 innerHTML
+        play: `` // svg
+      },
+      expectTime: 3e4 // 最长加载时间
+    }
   ]
 });
 ```
@@ -45,52 +53,27 @@ const player = new chimee({
 
 ## 事件
 
-### state_panstart
+### state-panstart
   * 含义： 在这个插件上触发 panstart 手势
   * 回调参数：
     * evt: touch 对象
 
-### state_panmove
+### state-panmove
   * 含义： 在这个插件上触发 panmove 手势
   * 回调参数：
     * evt: touch 对象
 
-### state_panend
+### state-panend
   * 含义： 在这个插件上触发 panstend 手势
   * 回调参数：
     * evt: touch 对象
+    
+### state-tap
+  * 含义： 在这个插件上触发 tap 手势
+    * 回调参数：
+      * evt: touch 对象
 
-## 注意
-
-1. ios 下不支持通过 js 来控制音量，只能通过物理按键来控制 [developer.apple](https://developer.apple.com/library/content/documentation/AudioVideo/Conceptual/Using_HTML5_Audio_Video/Device-SpecificConsiderations/Device-SpecificConsiderations.html#//apple_ref/doc/uid/TP40009523-CH5-SW1)
-安卓下没有问题
-
-2. 阻止手势
-  * 部分浏览器，(ios 下浏览器) 上滑手势
-  * 
-
-3. ios playbackrate
-
-4. 横屏
-
-5. ios 11 微信下， 不会自动加载
-
-6. ios 11 微信／safari 下， 全屏， tap 时会有一层， 灰色遮罩
-
-7. ios 下， 点击的时候会自动有一个蒙层
-
-8. ios 会触发一个 loadstart 事件，但是不会触发 canplay 事件
-
-8. 安卓问题
-
-9. ios 安卓 点击的时候有一层遮罩 -webkit-tap-highlight-color:rgba(255,255,255,0)
-
-10. ios 微信下， 默认不会加载数据，不会调用 loadstart 事件， [WeixinJSBridgeReady](https://www.w3ctech.com/topic/1165)
-
-11. 安卓下， 很容易被qq 浏览器劫持，使用 qq 浏览器的播放组件，如果仅仅是个视频的话， 有一个 hack，
-
-12. 小米手机 自带， 全屏前后， window.innerWidth 发生变化
-
-```html
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-```
+## state-change
+  * 含义： 这个插件状态发生变化
+  * 回调参数：
+    * state: 当前状态

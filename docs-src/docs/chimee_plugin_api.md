@@ -269,12 +269,12 @@ level 值可以由用户设置、插件默认设置或插件内部通过 `$level
 
 利用上述方法进行事件监听，监听的对象均为原生 video 对象。
 
-有的时候我们需要监听 container 和 wrapper 的相关事件，此时我们需要在事件名称上添加前缀。
+有的时候我们需要监听 container 和 wrapper 的相关事件，此时我们需要在监听事件时，传入对应的 option。
 
 如：
 
-- c_mousemove， 在 container 上绑定 mousemove 事件
-- w_mousemove， 在 wrapper 上绑定 mouse move 事件
+- `chimee.on('mousemove', evt => console.log(evt), { target: 'container' };`， 在 container 上绑定 `mousemove` 事件
+- ``chimee.on('mousemove', evt => console.log(evt), { target: 'wrapper' };``， 在 wrapper 上绑定 mouse move 事件
 
 > 官方提供的事件绑定方法主要目的是搭建插件间沟通桥梁，和插件对 video, container, wrapper 三者的监听。
 >
@@ -765,9 +765,10 @@ const player = new Chimee({
 
 ### preload
 
-- 类型：`string | void`
+- 类型：`string`
 - 含义：视频的预加载策略
-- 默认：`undefined`
+- 默认：`auto`
+- 可选项： `'auto'`, `'metadata'`, `'none'`, `''`
 
 ### poster
 
@@ -1005,7 +1006,7 @@ player.$del(test, 'bar'); // {foo: 2}, {foo: 2}
 
 全屏和退出全屏的相关操作。
 
-> 关于全屏对象的设置可到[Chimee 插件 API 介绍中的插件位置部分](https://github.com/Chimeejs/chimee/blob/master/doc/zh-cn/plugin-api.md#%E6%8F%92%E4%BB%B6%E4%BD%8D%E7%BD%AE)了解更多
+> 关于全屏对象的设置可到[Chimee 插件 API 介绍中的插件位置部分](https://github.com/Chimeejs/chimee/blob/master/doc/zh-cn/api/plugin-api.md#%E6%8F%92%E4%BB%B6%E4%BD%8D%E7%BD%AE)了解更多
 
 ### requestFullscreen
 
@@ -1050,6 +1051,16 @@ player.$del(test, 'bar'); // {foo: 2}, {foo: 2}
 否则返回正在全屏的对象。
 
 若无全屏则为 `undefined`
+
+### fullscreenchange
+
+如果需要监听全屏事件。只要监听 `fullscreenchange` 即可。
+
+```javascript
+player.on('fullscreenchange', evt => {
+  console.log('wowo, fullscreen', evt);
+});
+```
 
 ## PluginConfig参数
 
@@ -1271,12 +1282,13 @@ player.$del(test, 'bar'); // {foo: 2}, {foo: 2}
 | crossOrigin             | 是否跨域                           | boolean          | undefined |                                          |
 | loop                    | 是否循环                           | boolean          | false     |                                          |
 | muted                   | 是否静音                           | boolean          | false     |                                          |
-| preload                 | 是否预加载                          | boolean          | auto      |                                          |
+| preload                 | 是否预加载                          | string           | auto      |                                          |
 | poster                  | 封面                             | string           | ''        |                                          |
-| playsInline             | 是否内联                           | boolean          | false     | 我们会为此添加 `playsinle="true" webkit-playsinline="true" x5-video-player-type="h5"` |
+| playsInline             | 是否内联                           | boolean          | false     | 我们会为此添加 `playsinle webkit-playsinline x5-playsinline` |
 | xWebkitAirplay          | 是否添加 `x-webkit-airplay`        | boolean          | false     |                                          |
 | x5VideoPlayerFullscreen | 是否添加`x5-video-play-fullscreen` | boolean          | false     |                                          |
 | x5VideoOrientation      | ` x5-video-orientation`        | string \| void   | undefined | 可选 landscape 和 portrait                  |
+| x5VideoPlayerType       | ` x5-video-player-type`        | 'h5' \| void     | undefined |                                          |
 | playbackRate            | 回放速率                           | number           | 1         | 大于1加速，小于1减速                              |
 | defaultPlaybackRate     | 默认回放速率                         | number           | 1         | 大于1加速，小于1减速                              |
 | autoload                | 设置`src`时是否进行自动加载               | boolean          | true      |                                          |
@@ -1290,7 +1302,7 @@ player.$del(test, 'bar'); // {foo: 2}, {foo: 2}
 >
 > 1. 在 iOS 下需要 inline 的模式下才能自动播放，因此在传入的时候需要设置 `inline: true`。我们会为你设置`playsinline="true" webkit-playsinline="true"`
 > 2. 然而并不是所有 iOS 的 webview 都支持该模式，如果你的 iOS 版本比较旧，请检查 webView 上有否设置 `webview.allowsInlineMediaPlayback = YES;`
-> 3. 在腾讯的 X5 浏览器也需要同理，设为 `inline: true`，我们会为你设置 `x5-video-player-type="h5"`
+> 3. 在腾讯的 X5 浏览器也需要同理，设为 `inline: true`，我们会为你设置 `x5-playsinline`
 > 4. 部分浏览器必须要一开始就添加 video 元素，此时，请将 wrapper 的 html 写成如下格式。
 >
 > ```html
@@ -1379,7 +1391,7 @@ player.$del(test, 'bar'); // {foo: 2}, {foo: 2}
 
 - element【可选】
   - 类型：`string`
-  - 默认：video
+  - 默认：container
   - 可选项：video、wrapper、container
 - attribute 【必选】
   - 类型：`string`
@@ -1447,8 +1459,24 @@ this.$css('width', 100);
 
 绑定事件
 
-- key 事件名
-- fn 绑定行数
+- key
+  - 类型：`string`
+  - 含义：事件名称
+- fn
+  - 类型：`Function`
+  - 含义：处理函数
+- options
+  - 类型：`Object`
+  - 含义：可以穿入一些事件相关的属性
+  - 备注：可选参数
+    - target
+      - 类型：'kernel' | 'container' | 'wrapper' | 'video' | 'video-dom' | 'plugin' | 'esFullscreen'
+      - 含义：标明事件需要绑定的目标对象。
+      - 默认：会根据事件名智能判断
+    - stage
+      - 类型：'before' | 'after' | 'main' | '_'
+      - 含义：标明事件监听的阶段
+      - 默认：会根据事件名智能判断
 
 ### $off
 
@@ -1495,5 +1523,5 @@ const chimee2 = new Chimee({
 chimee2.use(pluginConfig.name);
 ```
 
-> 要了解如看编写与使用弹窗组件，[请看这里](https://github.com/Chimeejs/chimee/blob/master/doc/zh-cn/how-to-write-a-popup-plugin.md)。
+> 要了解如看编写与使用弹窗组件，[请看这里](https://github.com/Chimeejs/chimee/blob/master/doc/zh-cn/advanced/how-to-write-a-popup-plugin.md)。
 

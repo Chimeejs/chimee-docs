@@ -2,7 +2,7 @@
 
 Chimee 本质上是对原生 video 元素的一个封装。因此在许多用法上都会和原生 video 元素一致。本文会介绍 Chimee 在 video 层级上的具体用法。
 
-同时，Chimee 也是一个组件化框架，要理解这个框架的具体用法，请阅读[为什么要将 Chimee 设计成一个组件化框架？](https://github.com/Chimeejs/chimee/blob/master/doc/zh-cn/why-chimee-is-a-frame.md)
+同时，Chimee 也是一个组件化框架，要理解这个框架的具体用法，请阅读[为什么要将 Chimee 设计成一个组件化框架？](https://github.com/Chimeejs/chimee/blob/master/doc/zh-cn/design/why-chimee-is-a-frame.md)
 
 本文将分为以下几个部分进行阐述：
 
@@ -144,7 +144,13 @@ const player = new Chimee({
 ```javascript
 import popup from 'chimee-plugin-popup';
 import Chimee from 'chimee'
-Chimee.install(popup);
+Chimee.install(popup({
+  name: 'ccPopup',
+  title: '这是一个居中信息框',
+  body: '这里是信息内容',
+  offset: '50% 50%',
+  width: '200px'
+}));
 
 const chimee = new Chimee({
   wrapper: '#wrapper',
@@ -157,7 +163,13 @@ const chimee = new Chimee({
 ```javascript
 import popup from 'chimee-plugin-popup';
 import Chimee from 'chimee'
-Chimee.install(popup);
+Chimee.install(popup({
+  name: 'ccPopup',
+  title: '这是一个居中信息框',
+  body: '这里是信息内容',
+  offset: '50% 50%',
+  width: '200px'
+}));
 
 const chimee = new Chimee({
   wrapper: '#wrapper',
@@ -173,7 +185,13 @@ const chimee = new Chimee({
 ```javascript
 import popup from 'chimee-plugin-popup';
 import Chimee from 'chimee'
-Chimee.install(popup);
+Chimee.install(popup({
+  name: 'ccPopup',
+  title: '这是一个居中信息框',
+  body: '这里是信息内容',
+  offset: '50% 50%',
+  width: '200px'
+}));
 
 const chimee = new Chimee({
   wrapper: '#wrapper',
@@ -188,9 +206,9 @@ const chimee = new Chimee({
 
 优先级高的插件将在事件处理机制中优先获得事件，因此可以阻截后方插件获取事件。
 
-> 要理解插件的具体用法，请阅读[为什么要将 Chimee 设计成一个组件化框架？](https://github.com/Chimeejs/chimee/blob/master/doc/zh-cn/why-chimee-is-a-frame.md)
+> 要理解插件的具体用法，请阅读[为什么要将 Chimee 设计成一个组件化框架？](https://github.com/Chimeejs/chimee/blob/master/doc/zh-cn/design/why-chimee-is-a-frame.md)
 >
-> 要获知插件相关的 api， 请阅读[Chimee 插件 API 介绍](https://github.com/Chimeejs/chimee/blob/master/doc/zh-cn/plugin-api.md)
+> 要获知插件相关的 api， 请阅读[Chimee 插件 API 介绍](https://github.com/Chimeejs/chimee/blob/master/doc/zh-cn/api/plugin-api.md)
 
 ### container (v0.5.0 后)
 
@@ -207,6 +225,17 @@ const chimee = new Chimee({
 }
 ```
 
+### videoRequiredGuardedAttributes（v0.10.0 后）
+
+* 类型：`string[]`
+* 含义：在切换 video 的时候，我们会创建一个新的 video， 此时我们可能会丢掉 vidoe 上除 video 属性外的部分属性，所以，为了保留这些属性，你需要将属性名称提供给我们。
+* 默认：`[style]`
+
+### noDefaultContextMenu（v0.10.1 后）
+
+* 类型：`boolean|'container'|'wrapper'`
+* 含义：配置该属性可以隐藏原生右键菜单。配置` true` 的话会隐藏 video 上的原生菜单，配置 `container` 和 `wrapper` 则隐藏对应层级上的菜单。
+
 ### video属性
 
 除了以上几个用于 Chimee 内部使用的配置，我们还可以传入一些 video 元素需要用到的参数。
@@ -221,12 +250,13 @@ const chimee = new Chimee({
 | crossOrigin             | 是否跨域                           | boolean          | undefined   |                                          |
 | loop                    | 是否循环                           | boolean          | false       |                                          |
 | muted                   | 是否静音                           | boolean          | false       |                                          |
-| preload                 | 是否预加载                          | boolean          | undefined   |                                          |
+| preload                 | 是否预加载                          | string           | 'auto'      |                                          |
 | poster                  | 封面                             | string           | ''          |                                          |
-| playsInline             | 是否内联                           | boolean          | false       | 我们会为此添加 `playsinle="true" webkit-playsinline="true" x5-video-player-type="h5"` |
+| playsInline             | 是否内联                           | boolean          | false       | 我们会为此添加 `playsinle webkit-playsinline x5-playsinline` |
 | xWebkitAirplay          | 是否添加 `x-webkit-airplay`        | boolean          | false       |                                          |
 | x5VideoPlayerFullscreen | 是否添加`x5-video-play-fullscreen` | boolean          | false       |                                          |
 | x5VideoOrientation      | ` x5-video-orientation`        | string \| void   | undefined   | 可选 landscape 和 portrait                  |
+| x5VideoPlayerType       | ` x5-video-player-type`        | 'h5' \| void     | undefined   |                                          |
 | playbackRate            | 回放速率                           | number           | 1           | 大于1加速，小于1减速                              |
 | defaultPlaybackRate     | 默认回放速率                         | number           | 1           | 大于1加速，小于1减速                              |
 | autoload                | 设置`src`时是否进行自动加载               | boolean          | true        |                                          |
@@ -240,7 +270,7 @@ const chimee = new Chimee({
 >
 > 1. 在 iOS 下需要 inline 的模式下才能自动播放，因此在传入的时候需要设置 `inline: true`。我们会为你设置`playsinline="true" webkit-playsinline="true"`
 > 2. 然而并不是所有 iOS 的 webview 都支持该模式，如果你的 iOS 版本比较旧，请检查 webView 上有否设置 `webview.allowsInlineMediaPlayback = YES;`
-> 3. 在腾讯的 X5 浏览器也需要同理，设为 `inline: true`，我们会为你设置 `x5-video-player-type="h5"`
+> 3. 在腾讯的 X5 浏览器也需要同理，设为 `inline: true`，我们会为你设置 `x5-playsinline`
 > 4. 部分浏览器必须要一开始就添加 video 元素，此时，请将 wrapper 的 html 写成如下格式。
 >
 > ```html
@@ -372,7 +402,7 @@ chimee.load({
 })
 ```
 
-> load 方法会触发 load 系列事件，你可以通过插件 `beforeLoad` 阻截或挂起事件，也可以通过`load`事件阻止冒泡等。要了解更多相关知识，可以阅读[插件的事件机制](https://github.com/Chimeejs/chimee/blob/master/doc/zh-cn/plugin-api.md#%E4%BA%8B%E4%BB%B6%E6%9C%BA%E5%88%B6)。
+> load 方法会触发 load 系列事件，你可以通过插件 `beforeLoad` 阻截或挂起事件，也可以通过`load`事件阻止冒泡等。要了解更多相关知识，可以阅读[插件的事件机制](https://github.com/Chimeejs/chimee/blob/master/doc/zh-cn/api/plugin-api.md#%E4%BA%8B%E4%BB%B6%E6%9C%BA%E5%88%B6)。
 
 > load 会在以下情况切换内部 kernel。
 >
@@ -385,13 +415,13 @@ chimee.load({
 
 播放视频的函数。
 
-> play 方法会触发 play 系列事件，你可以通过插件 `beforePlay` 阻截或挂起事件，也可以通过`play`事件阻止冒泡等。要了解更多相关知识，可以阅读[插件的事件机制](https://github.com/Chimeejs/chimee/blob/master/doc/zh-cn/plugin-api.md#%E4%BA%8B%E4%BB%B6%E6%9C%BA%E5%88%B6)。
+> play 方法会触发 play 系列事件，你可以通过插件 `beforePlay` 阻截或挂起事件，也可以通过`play`事件阻止冒泡等。要了解更多相关知识，可以阅读[插件的事件机制](https://github.com/Chimeejs/chimee/blob/master/doc/zh-cn/api/plugin-api.md#%E4%BA%8B%E4%BB%B6%E6%9C%BA%E5%88%B6)。
 
 ### pause
 
 暂停视频播放的函数
 
-> pause 方法会触发 pause 系列事件，你可以通过插件 `beforePasue` 阻截或挂起事件，也可以通过`pause`事件阻止冒泡等。要了解更多相关知识，可以阅读[插件的事件机制](https://github.com/Chimeejs/chimee/blob/master/doc/zh-cn/plugin-api.md#%E4%BA%8B%E4%BB%B6%E6%9C%BA%E5%88%B6)。
+> pause 方法会触发 pause 系列事件，你可以通过插件 `beforePasue` 阻截或挂起事件，也可以通过`pause`事件阻止冒泡等。要了解更多相关知识，可以阅读[插件的事件机制](https://github.com/Chimeejs/chimee/blob/master/doc/zh-cn/api/plugin-api.md#%E4%BA%8B%E4%BB%B6%E6%9C%BA%E5%88%B6)。
 
 ### seek
 
@@ -402,7 +432,19 @@ chimee.load({
 
 `seek`函数本质等同于设置 video 上的 `currentTime`。一般用于快进后退。在 chimee 上也可以直接设置 `currentTime`，并不一定需要运用此函数。
 
-> seek 方法会触发 seek 系列事件，你可以通过插件 `beforeSeek` 阻截事件，也可以通过`seek`事件阻止冒泡等。要了解更多相关知识，可以阅读[插件的事件机制](https://github.com/Chimeejs/chimee/blob/master/doc/zh-cn/plugin-api.md#%E4%BA%8B%E4%BB%B6%E6%9C%BA%E5%88%B6)。
+> seek 方法会触发 seek 系列事件，你可以通过插件 `beforeSeek` 阻截事件，也可以通过`seek`事件阻止冒泡等。要了解更多相关知识，可以阅读[插件的事件机制](https://github.com/Chimeejs/chimee/blob/master/doc/zh-cn/api/plugin-api.md#%E4%BA%8B%E4%BB%B6%E6%9C%BA%E5%88%B6)。
+
+### startLoad
+
+开始视频源的加载（现在只有 hls 和 native 模式支持）
+
+### stopLoad
+
+暂停视频源的加载
+
+其中 chimee-kernel-flv.js 和 native 模式均是将 src 移除。
+
+而 chimee-kernel-flv 和 chimes-kernel-hls 则是暂停加载。
 
 ### focus
 
@@ -436,7 +478,7 @@ chimee.load({
   * 类型：`string`
   * 播放地址
 * option
-  * 类型：`Object`
+  * 类型：`Object`    
   * duration
     * 类型：`number`
     * 默认：3
@@ -682,9 +724,10 @@ const player = new Chimee({
 
 ### preload
 
-- 类型：`string | void`
+- 类型：`string`
 - 含义：视频的预加载策略
-- 默认：`undefined`
+- 默认：`auto`
+- 可选项： `'auto'`, `'metadata'`, `'none'`, `''`
 
 ### poster
 
@@ -707,7 +750,7 @@ const player = new Chimee({
 ### x5VideoOrientation
 
 - 类型：`string | void`
-- 含义：`x5-video-orientation`，可选`landscape`和`protraint`
+- 含义：`x5-video-orientation`，可选`landscape`, `protraint`, `landscape|portrait`
 - 默认：`undefined`
 
 ### xWebkitAirplay
@@ -764,16 +807,38 @@ chimee 作为 video 的映射，自然也是可以监听 video 上的事件。�
   - fn
     - 类型：`Function`
     - 含义：处理函数
+  - options
+    - 类型：`Object`
+    - 含义：可以穿入一些事件相关的属性
+    - 备注：可选参数
+      - target
+        - 类型：'kernel' | 'container' | 'wrapper' | 'video' | 'video-dom' | 'plugin' | 'esFullscreen'
+        - 含义：标明事件需要绑定的目标对象。
+        - 默认：会根据事件名智能判断
+      - stage
+        - 类型：'before' | 'after' | 'main' | '_'
+        - 含义：标明事件监听的阶段
+        - 默认：会根据事件名智能判断
 
 > 利用 on 可以直接监听任何发生在 video 上的事件。
 >
 > 但是 video 只是 chimee 上的一部分。chimes 分为 wrapper, container, video 三个层级。
 >
-> 如果要监听 wrapper 上的事件，请添加前缀 w_
+> 其中要监听特定的事件，请按照如下建议配置参数
 >
-> 如果要监听 container 上的事件，请添加前缀 c_
+> * 监听内核事件， target 为 kernel
+> * 监听 container 事件， target 为 container
+> * 监听 wrapper 事件，target 为 wrapper
+> * 监听插件间自定义事件，target 为 plugin
+> * 监听全凭相关事件，target 为 'esFullscreen' （不建议配置，代码会自动分析）
+> * 监听 video 上的 dom 事件，如 click ，target 为 'video-dom' （不建议配置，代码会自动分析）
+> * 监听 video 自身事件，如 play，target 为 video （不建议配置，代码会自动分析）
 >
-> 要理解 chimee 的事件体系，请阅读[《为什么要将 Chimee 设计成一个组件化框架？》中的事件体系部分](https://github.com/Chimeejs/chimee/blob/master/doc/zh-cn/why-chimee-is-a-frame.md)
+> ~~如果要监听 wrapper 上的事件，请添加前缀 w_~~
+>
+> ~~如果要监听 container 上的事件，请添加前缀 c_~~
+>
+> 要理解 chimee 的事件体系，请阅读[《为什么要将 Chimee 设计成一个组件化框架？》中的事件体系部分](https://github.com/Chimeejs/chimee/blob/master/doc/zh-cn/design/why-chimee-is-a-frame.md)
 
 ### off
 
@@ -786,6 +851,18 @@ chimee 作为 video 的映射，自然也是可以监听 video 上的事件。�
   - fn
     - 类型：`Function`
     - 含义：处理函数
+  - options
+    - 类型：`Object`
+    - 含义：可以穿入一些事件相关的属性
+    - 备注：可选参数
+      - target
+        - 类型：'kernel' | 'container' | 'wrapper' | 'video' | 'video-dom' | 'plugin' | 'esFullscreen'
+        - 含义：标明事件需要绑定的目标对象。
+        - 默认：会根据事件名智能判断
+      - stage
+        - 类型：'before' | 'after' | 'main' | '_'
+        - 含义：标明事件监听的阶段
+        - 默认：会根据事件名智能判断
 
 ### once
 
@@ -797,14 +874,27 @@ chimee 作为 video 的映射，自然也是可以监听 video 上的事件。�
   - fn
     - 类型：`Function`
     - 含义：处理函数
+  - options
+    - 类型：`Object`
+    - 含义：可以穿入一些事件相关的属性
+    - 备注：可选参数
+      - target
+        - 类型：'kernel' | 'container' | 'wrapper' | 'video' | 'video-dom' | 'plugin' | 'esFullscreen'
+        - 含义：标明事件需要绑定的目标对象。
+        - 默认：会根据事件名智能判断
+      - stage
+        - 类型：'before' | 'after' | 'main' | '_'
+        - 含义：标明事件监听的阶段
+        - 默认：会根据事件名智能判断
 
 ### emit
 
 - 含义：触发一次由异步函数处理的事件
 - 参数：
   - key
-    - 类型：`string`
+    - 类型：`string | { name: string, target: string }`
     - 含义：事件名称
+    - 备注：target 为 'kernel' | 'container' | 'wrapper' | 'video' | 'video-dom' | 'plugin' | 'esFullscreen'
   - 其余自定义参数
 
 一般用于触发如 play， pause 等行为，和直接调用`play`、`pause`等方法一致。也可以利用此和插件进行沟通。
@@ -820,9 +910,35 @@ chimee 作为 video 的映射，自然也是可以监听 video 上的事件。�
 
 一般用于触发 dom 事件。
 
+### registerEvents
+
+* 注册事件名字
+* 参数
+  * options
+    * 类型： object
+      * name
+        * 类型： `string` 
+        * 含义：注册后的事件名称
+      * target
+        * 类型： `string` 
+        * 含义：注册事件的目标
+
+用于注册新事件，现阶段仅支持在 kernel 上注册。
+
+例如，我们像监听 kernel 上的 test 事件。可以这么做
+
+```javascript
+import Chimee from 'chimee'
+
+Chimee.registerEvents({
+  name: 'test',
+  target: 'kernel',
+});
+```
+
 ## 数据监听相关方法
 
-###$watch
+### $watch
 
 $watch 可用于监听特定属性的变化。当属性变化时，会执行传入的回调函数，回调函数会接收到新的属性值和原属性值。
 
@@ -975,7 +1091,7 @@ player.$del(test, 'bar'); // {foo: 2}, {foo: 2}
 
 全屏和退出全屏的相关操作。
 
-> 关于全屏对象的设置可到[Chimee 插件 API 介绍中的插件位置部分](https://github.com/Chimeejs/chimee/blob/master/doc/zh-cn/plugin-api.md#%E6%8F%92%E4%BB%B6%E4%BD%8D%E7%BD%AE)了解更多
+> 关于全屏对象的设置可到[Chimee 插件 API 介绍中的插件位置部分](https://github.com/Chimeejs/chimee/blob/master/doc/zh-cn/api/plugin-api.md#%E6%8F%92%E4%BB%B6%E4%BD%8D%E7%BD%AE)了解更多
 
 ### requestFullscreen
 
@@ -1021,6 +1137,16 @@ player.$del(test, 'bar'); // {foo: 2}, {foo: 2}
 
 若无全屏则为 `undefined`
 
+### fullscreenchange
+
+如果需要监听全屏事件。只要监听 `fullscreenchange` 即可。
+
+```javascript
+player.on('fullscreenchange', evt => {
+  console.log('wowo, fullscreen', evt);
+});
+```
+
 ## 插件操作
 
 在 chimee 中我们会使用插件来实现业务需求，因此我们要进行插件安装。在 chimee 上有以下几个方法。
@@ -1040,7 +1166,13 @@ player.$del(test, 'bar'); // {foo: 2}, {foo: 2}
 ```javascript
 import popup from 'chimee-plugin-popup';
 import Chimee from 'chimee'
-Chimee.install(popup);
+Chimee.install(popup({
+  name: 'ccPopup',
+  title: '这是一个居中信息框',
+  body: '这里是信息内容',
+  offset: '50% 50%',
+  width: '200px'
+}));
 ```
 
 ### hasInstalled
@@ -1058,7 +1190,13 @@ Chimee.install(popup);
 ```javascript
 import popup from 'chimee-plugin-popup';
 import Chimee from 'chimee'
-Chimee.install(popup);
+Chimee.install(popup({
+  name: 'ccPopup',
+  title: '这是一个居中信息框',
+  body: '这里是信息内容',
+  offset: '50% 50%',
+  width: '200px'
+}));
 Chimee.hasInstalled(popup.name); // true
 Chimee.hasInstalled('something else'); // false
 ```
@@ -1102,7 +1240,13 @@ Chimee.hasInstalled('something else'); // false
 import popup from 'chimee-plugin-popup';
 import danmu from 'chimee-plugin-danmu';
 import Chimee from 'chimee'
-Chimee.install(popup);
+Chimee.install(popup({
+  name: 'ccPopup',
+  title: '这是一个居中信息框',
+  body: '这里是信息内容',
+  offset: '50% 50%',
+  width: '200px'
+}));
 Chimee.install(danmu)
 
 const chimee = new Chimee('#wrapper');
@@ -1162,7 +1306,15 @@ Chimee.silent = true;
 Chimee.errorHandler = error => console.log('wow, an error!!!', error.message)
 ```
 
+### useStyleFullscreen
+
+在某些特殊的情况下，浏览器的全屏效果不是特别好。此时我们可以通过 css 的样式模拟全屏。
+
+```javascript
+Chimee.config.useStyleFullscreen = true;
+```
+
 ## 进阶使用
 
-随着业务发展越来越复杂，我们会发现我们需要实现众多功能。这些功能彼此耦合关联，难以维护。这时候我们需要将功能模块化使用，那样便于我们进行灰度和 debug。此时我们需要使用 chimee 自身的插件体系。让我们进入下一部分，[为什么要将 Chimee 设计成一个组件化框架？](https://github.com/Chimeejs/chimee/blob/master/doc/zh-cn/why-chimee-is-a-frame.md)。
+随着业务发展越来越复杂，我们会发现我们需要实现众多功能。这些功能彼此耦合关联，难以维护。这时候我们需要将功能模块化使用，那样便于我们进行灰度和 debug。此时我们需要使用 chimee 自身的插件体系。让我们进入下一部分，[为什么要将 Chimee 设计成一个组件化框架？](https://github.com/Chimeejs/chimee/blob/master/doc/zh-cn/design/why-chimee-is-a-frame.md)。
 

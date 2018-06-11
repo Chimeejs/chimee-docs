@@ -36,7 +36,7 @@ const player = new chimee({
 
 ```javascript
 plugin: [{
-  name: chimeePluginControlbar.name,
+  name: chimeePluginMobileControlbar.name,
   majorColor: '',
   hoverColor: '',
   children: {
@@ -79,7 +79,9 @@ plugin: [{
   
 ##### 目前支持的组件及配置
 
-  * play
+组件支持的事件： 'tap', 'swipe', 'panstart', 'panmove', 'panend', 'press', 'doubletap'
+
+  * play
     * 类型： Object
     * 含义： 配置播放暂停键 icon 及事件
     * 默认： {}
@@ -112,7 +114,7 @@ plugin: [{
       },
       // 可以指定 event 来绑定一些事件，默认 this 是该插件，而不是 dom
       event: {
-        click () {
+        tap () {
           console.log('');
         }
       }
@@ -132,7 +134,7 @@ plugin: [{
     {
       // 可以指定 event 来绑定一些事件，默认 this 是该插件，而不是 dom
       event: {
-        click () {
+        tap () {
           console.log('');
         }
       }
@@ -152,7 +154,7 @@ plugin: [{
     {
       // 可以指定 event 来绑定一些事件，默认 this 是该插件，而不是 dom
       event: {
-        click () {
+        tap () {
           console.log('');
         }
       }
@@ -172,7 +174,7 @@ plugin: [{
     {
       // 可以指定 event 来绑定一些事件，默认 this 是该插件，而不是 dom
       event: {
-        click () {
+        tap () {
           console.log('');
         }
       }
@@ -201,7 +203,7 @@ plugin: [{
 
       // 可以指定 event 来绑定一些事件，默认 this 是该插件，而不是 dom
       event: {
-        click () {
+        tap () {
           console.log('');
         }
       }
@@ -225,14 +227,34 @@ plugin: [{
       html: ``,
       // 可以指定 event 来绑定一些事件，默认 this 是该插件，而不是 dom
       event: {
-        click () {
+        tap () {
           console.log('');
         }
       }
     }
     ```
 
-##### 组件相关问题
+## 事件
+
+在 chimee 实例上可以监听下列事件
+
+* barShow 控制条出现
+
+```js
+  chimeeInstance.$on('barShow', function () {
+    console.log('show')
+  })
+```
+
+* barHide 控制条隐藏
+
+```js
+  chimeeInstance.$on('barHide', function () {
+    console.log('hide')
+  })
+```
+
+## 组件相关问题
 
 * Q: 子组件的默认顺序是什么？
 
@@ -252,7 +274,7 @@ plugin: [{
 
   A: 假如 children 配置后， 会读 children 的属性，并渲染， 不会补充其他组件，所以，需要你把所有的组件都写.
 
-#### 兼容性
+## 兼容性
 
 > 兼容性是移动端的大坑，在各个浏览器内总有特殊的表现，遇到最多的情况是，浏览器控制了 video，强制使用他的播放器，并且有最高层级，结尾的时候还会有广告😂
 

@@ -7,7 +7,7 @@
   "author": "chimee",
   "license": "MIT",
   "scripts": {
-    "build": "npm-run-all clean rm-mds sync-docs build:*",
+    "build": "npm-run-all rm-mds sync-docs build:*",
     "rm-mds": "rm -f docs-src/docs/*",
     "clean": "rm -rf docs",
     "build:docs": "generate-md --layout ./docs-src/layout --input docs-src/docs/ --output docs/",
