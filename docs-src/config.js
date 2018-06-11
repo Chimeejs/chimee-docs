@@ -15,7 +15,7 @@ module.exports = {
   '基础': {
     'childs': {
       '🖥&nbsp; chimee 的展示':{
-        'md_fname': 'chimee_player',
+        'md_fname': 'chimee_html',
         'md_url': 'https://raw.githubusercontent.com/chimeejs/chimee/master/doc/zh-cn/essentials/html.md'
       },
       '📱&nbsp; 插件的使用':{
